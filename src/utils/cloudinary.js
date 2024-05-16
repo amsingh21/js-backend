@@ -2,6 +2,8 @@ import { v2 as cloudinary} from "cloudinary";
 
 import fs from "fs"
 
+import { ApiError } from "./ApiError.js";
+
   // Configuration
   cloudinary.config({ 
     cloud_name:process.env.CLOUDINARY_CLOUD_NAME , 
@@ -13,19 +15,23 @@ import fs from "fs"
 const uploadOnCloudinary = async (localFilePath)=> {
     try {
        if (!localFilePath) return null
+       console.log(`File path inside cloudinary utils ${localFilePath}`);
        //upload the file on cloudinary
-       const response = await cloudinary.uploader(localFilePath , {
+       const response = await cloudinary.uploader.upload(localFilePath , {
         resource_type: "auto"
        }
        ) 
 
        // file has been uploaded successfully 
-       console.log("File is uplaoded on cloudinary", response.url);
+       //console.log("File is uplaoded on cloudinary", response.url);
+       fs.unlinkSync(localFilePath)
 
         return response;
     } catch (error) {
-        fs.unlinkSync(localFilePath) // removes locally saved tem file as the upload operation got failed 
 
+        console.log("File upload failed on cloudinary");
+        fs.unlinkSync(localFilePath) // removes locally saved tem file as the upload operation got failed 
+        throw new ApiError(400, error)
         return null
     }
 }
