@@ -10,7 +10,7 @@ const subscriptionSchema = new Schema({
         ref: "User"
     }
 }, 
-{ timeseries:true}
+{ timestamps:true}
 )
 
 
