@@ -494,5 +494,6 @@ export {registerUser,
   updateAccountDetails,
   updateUserAvatar,
   getUserChannelProfile,
-  getWatchHistory
+  getWatchHistory,
+  updateUserCoverImage
 };
