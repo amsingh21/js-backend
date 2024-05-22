@@ -22,6 +22,7 @@ const uploadOnCloudinary = async (localFilePath)=> {
        }
        ) 
 
+       
        // file has been uploaded successfully 
        //console.log("File is uplaoded on cloudinary", response.url);
        fs.unlinkSync(localFilePath)
@@ -36,6 +37,32 @@ const uploadOnCloudinary = async (localFilePath)=> {
     }
 }
 
+const deletOnCloudinary = async (oldLocalFilePath)=> {
+    try {
+       if (!oldLocalFilePath) return null
+       console.log(`old File path inside cloudinary utils ${oldLocalFilePath}`);
+       //upload the file on cloudinary
+       const response = await cloudinary.uploader.destroy(oldLocalFilePath , {
+        resource_type: "auto"
+       }
+       ) 
+
+       
+       // file has been uploaded successfully 
+       //console.log("File is uplaoded on cloudinary", response.url);
+       fs.unlinkSync(oldLocalFilePath)
+
+        return response;
+    } catch (error) {
+
+        console.log("File delete failed on cloudinary");
+        fs.unlinkSync(oldLocalFilePath) // removes locally saved tem file as the upload operation got failed 
+        throw new ApiError(400, error)
+        return null
+    }
+}
 
 
-export {uploadOnCloudinary}
+export {uploadOnCloudinary,
+    deletOnCloudinary
+}
